@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  flask:
+    container_name: flask
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+    networks:
+      - nginx-proxy
+    environment:
+      - VIRTUAL_HOST=domain.com,www.domain.com
+      - LETSENCRYPT_HOST=domain.com
+      - LETSENCRYPT_EMAIL=admin@domain.com
+      - VIRTUAL_PORT=5000
+    volumes:
+      - "./:/app"
+    entrypoint: /flask-entrypoint.sh
+    expose:
+      - 5000
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
